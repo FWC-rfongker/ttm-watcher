@@ -1,0 +1,32 @@
+name: TTM Ticket Watcher
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
+
+concurrency:
+  group: ttm-watcher
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Watch
+        env:
+          EVENT_URLS: ${{ vars.EVENT_URLS }}
+          ROUNDS: ${{ vars.ROUNDS }}
+          INTERVAL: ${{ vars.INTERVAL }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RUN_MINUTES: "340"
+          ANNOUNCE_START: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+        run: python watcher.py
