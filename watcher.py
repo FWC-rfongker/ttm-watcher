@@ -1,6 +1,4 @@
-# test
-    indented
-line3"""
+"""
 TTM Ticket Watcher (cloud) - notify only, never buys.
 Checks Thai Ticket Major event pages every ~90s; when a watched round's
 "buy" button becomes enabled, sends a push via ntfy and/or Telegram.
